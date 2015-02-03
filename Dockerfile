@@ -97,6 +97,12 @@ RUN ln -s /data /opt/rt4/var
 # Add system services
 RUN mkdir /var/log/rt4 /var/log/spamd
 ADD ./svc /etc/service
+
+# nginx SSL
+RUN mkdir -p /etc/nginx/ssl
+ADD ./etc/server.crt /etc/nginx/ssl/server.crt
+ADD ./etc/server.key /etc/nginx/ssl/server.key
+
 CMD ["/sbin/my_init"]
 
 VOLUME ["/data", "/etc/nginx/ssl", "/import"]
