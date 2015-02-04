@@ -3,4 +3,4 @@
 sed -i "s/^\(\* \^X-RT-Loop-Prevention:\) .*/\1 $RT_NAME/; \
       s/^\(| rt-mailgate .*--url \)..*/\1 $WEB_DOMAIN/" \
       /etc/postfix/procmailrc.rt
-( cd /etc/postfix; make )
+(cd /etc/postfix; make clean all)
