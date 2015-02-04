@@ -42,26 +42,13 @@ ENV RT rt-4.2.9
 ENV RTSRC ${RT}.tar.gz
 ENV GITHUB https://github.com/bestpractical
 
-COPY ./scripts/rtcron /usr/bin/rtcron
-COPY ./scripts/rtinit /usr/bin/rtinit
-COPY ./scripts/rtdata /usr/bin/rtdata
-
-COPY ./scripts/installext.sh /src/installext.sh
-
-# Add system service config
-COPY ./etc/nginx.conf /etc/nginx/nginx.conf
-COPY ./etc/crontab.root /var/spool/cron/crontabs/root
-
-# Configure Postfix
-COPY ./etc/postfix /etc/postfix
-COPY ./etc/logrotate.procmail /etc/logrotate.d/procmail
-COPY scripts/postfixinit /etc/my_init.d/10_update_postfix_config.sh
-
 # Autoconfigure cpan
 RUN echo q | /usr/bin/perl -MCPAN -e shell
 
 # Install Capture::Tiny regardless of test failures for now
 RUN cpan -f Capture::Tiny
+
+COPY ./scripts/installext.sh /src/installext.sh
 
 # Install RT
 RUN mkdir -p /src && \
@@ -80,11 +67,22 @@ RUN mkdir -p /src && \
   /src/installext.sh ${GITHUB}/rt-extension-commandbymail && \
   rm -rf /src
 
+COPY ./scripts/rtcron /usr/bin/rtcron
+COPY ./scripts/rtinit /usr/bin/rtinit
+COPY ./scripts/rtdata /usr/bin/rtdata
+
+# Add system service config
+COPY ./etc/nginx.conf /etc/nginx/nginx.conf
+COPY ./etc/crontab.root /var/spool/cron/crontabs/root
+
+# Configure Postfix
+COPY ./etc/postfix /etc/postfix
+COPY ./etc/logrotate.procmail /etc/logrotate.d/procmail
+COPY scripts/postfixinit /etc/my_init.d/10_update_postfix_config.sh
+
 RUN chown -R root:root /etc/postfix
 RUN newaliases
 RUN mkdir -m 1777 /var/log/procmail
-
-# Build RT and extensions
 
 RUN mkdir -p /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky
 ADD ./misc/MakeClicky /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky/Default
