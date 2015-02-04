@@ -2,8 +2,13 @@ Set( $rtname, $ENV{RT_NAME} || "Example Corp" );
 Set( $Organisation, $ENV{RT_ORG} || "rt.example.com" );
 Set( $WebDomain, $ENV{WEB_DOMAIN} || "localhost" );
 Set( $WebPort, $ENV{WEB_PORT} || 80 );
+# uncomment this line if we are not using a reverse proxy? -jbd
+# Set( $WebBaseURL, "https://".RT->Config->Get('WebDomain').'/');
 Set( $LogToSTDERR, $ENV{LOG_LEVEL} || "info" );
 Set( $Timezone, "UTC" );
+Set( $CanonicalizeRedirectURLs, 1);
+Set( $CanonicalizeURLsInFeeds, 1);
+
 
 Set( $DatabaseType, "Pg" );
 Set( $DatabaseHost, $ENV{DATABASE_HOST} || $ENV{DB_PORT_5432_TCP_ADDR} || "localhost" );
