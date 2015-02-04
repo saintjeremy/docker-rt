@@ -7,3 +7,6 @@ aliases.db:
 
 sasl_passwd.db:
 	postmap hash:sasl_passwd
+
+clean: 
+	rm -f sasl_passwd.db aliases.db
