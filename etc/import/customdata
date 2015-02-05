@@ -1,21 +1,10 @@
 use strict;
 use warnings;
 
-our @Queues = (
-    # some definitions here
-);
-
-our @Users = (
-    # some other definitions here
-);
-
-our @Groups = (
-  # custom stuffs
-);
-
-our @ACL = {
-  # custom stuffs
-};
+our @Queues = ();
+our @Users = ();
+our @Groups = ();
+our @ACL = { };
 
 # Examples
 push @Users, {
@@ -52,17 +41,27 @@ push @Groups, {
 
 push @Queues, {
     Name                => 'Service',
-    CorrespondAddress   => 'service@example.com',
-    CommentAddress      => 'service-comment@example.com',
+    CorrespondAddress   => 'service@tickets.example.com',
+    CommentAddress      => 'service-comment@tickets.example.com',
 };
 
+# Allow requestors to show, reply
 push @ACL, map {
   {
     Right       => $_,
     GroupDomain => 'RT::System-Role',
     GroupType   => 'Requestor',
   }
-} qw(ShowTicket ReplyToTicket SeeQueue);
+} qw(ShowTicket ReplyToTicket);
+
+# Allow everyone to create tickets in all queues.
+push @ACL, map {
+  {
+    Right       => $_,
+    GroupDomain => 'SystemInternal',
+    Group       => 'Everyone'
+  }
+} qw(CreateTicket);
 
 push @ACL, map {
   {
@@ -71,7 +70,7 @@ push @ACL, map {
     GroupDomain => 'UserDefined',
     GroupId     => 'Coordinators'
   }
-} qw(CreateTicket ReplyToTicket SeeQueue ShowTicket);
+} qw(CreateTicket DeleteTicket TakeTicket StealTicket OwnTicket ReplyToTicket SeeQueue ShowTicket ShowTicketComments);
 
 push @ACL, map {
   {
