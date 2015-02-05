@@ -72,6 +72,7 @@ COPY ./scripts/rtinit /usr/bin/rtinit
 COPY ./scripts/rtdata /usr/bin/rtdata
 
 # Add system service config
+COPY ./etc/nginx_rt.conf /etc/nginx/nginx_rt.conf
 COPY ./etc/nginx.conf /etc/nginx/nginx.conf
 COPY ./etc/crontab.root /var/spool/cron/crontabs/root
 
@@ -81,16 +82,18 @@ COPY ./etc/logrotate.procmail /etc/logrotate.d/procmail
 COPY scripts/postfixinit /etc/my_init.d/10_update_postfix_config.sh
 
 RUN chown -R root:root /etc/postfix
-RUN newaliases
 RUN mkdir -m 1777 /var/log/procmail
-
-RUN mkdir -p /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky
-ADD ./misc/MakeClicky /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky/Default
+# make a homedir for the nobody user for procmail
+RUN mkdir /nonexistent
+RUN chown nobody:nogroup /nonexistent
 
 # Configure RT
 COPY ./RT_SiteConfig.pm /opt/rt4/etc/RT_SiteConfig.pm
 RUN mv /opt/rt4/var /data
 RUN ln -s /data /opt/rt4/var
+
+RUN mkdir -p /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky
+ADD ./misc/MakeClicky /opt/rt4/local/html/Callbacks/MyCallbacks/Elements/MakeClicky/Default
 
 # Add system services
 RUN mkdir /var/log/rt4 /var/log/spamd
@@ -105,7 +108,6 @@ CMD ["/sbin/my_init"]
 
 VOLUME ["/data", "/etc/nginx/ssl", "/import"]
 EXPOSE 25
-EXPOSE 80
 EXPOSE 443
 
 

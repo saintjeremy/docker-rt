@@ -2,7 +2,6 @@
 # copy /etc/resolv.conf to postfix's special location
 cp /etc/resolv.conf /var/spool/postfix/etc/resolv.conf
 # write in environment variable values to postfix config files
-sed -i "s/^\(\* \^X-RT-Loop-Prevention:\) .*/\1 $RT_NAME/; \
-      s/^\(| rt-mailgate .*--url \)..*/\1 $WEB_DOMAIN/" \
+sed -i "s/^\(\* \^X-RT-Loop-Prevention:\) .*/\1 $RT_NAME/" \
       /etc/postfix/procmailrc.rt
 (cd /etc/postfix; make clean all)

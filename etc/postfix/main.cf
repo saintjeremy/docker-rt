@@ -20,8 +20,8 @@ smtp_sasl_security_options =
 # information on enabling SSL in the smtp client.
 
 myhostname = tickets.example.com
-alias_maps = hash:/etc/aliases
-alias_database = hash:/etc/aliases
+alias_maps = hash:/etc/postfix/aliases
+alias_database = hash:/etc/postfix/aliases
 myorigin = $myhostname
 mydomain = $myhostname
 mydestination = $myhostname, localhost
